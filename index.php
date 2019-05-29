@@ -24,8 +24,8 @@ require_once "functions.php";
     <!-- Details about this demo file -->
     <div class="row">
         <div class="col">
-            <h1 class="mt-4"><?= isset($siteTitle) && $siteTitle>"" ? $siteTitle : 'CHANGE THE SITE TITLE' ?></h1>
-            <h2 class="text-muted"><?= isset($title) && $title>"" ? $title : 'CHANGE THE TITLE' ?></h2>
+            <h1 class="mt-4"><?= isset($siteTitle) && $siteTitle > "" ? $siteTitle : 'CHANGE THE SITE TITLE' ?></h1>
+            <h2 class="text-muted"><?= isset($title) && $title > "" ? $title : 'CHANGE THE TITLE' ?></h2>
             <p class="lead">Bookmarker Application dashboard.</p>
             <p>Use the menu (above) to select the table to work with, or go to the Management menu
                 option and use the steps on that page to create and seed the database.</p>
@@ -49,11 +49,15 @@ require_once "functions.php";
             <h2>Table(s)</h2>
         </div>
         <?php
-        foreach($dbTableList as $table) {
+        foreach ($dbTableList as $table) {
             $tableText = textify($table);
             ?>
             <div class="col-3">
-                <h4><?=ucwords($tableText);?></h4>
+                <h4>
+                    <a href="<?= $table ?>.php" class="text-dark">
+                        <?= ucwords($tableText); ?> <i class="fa fa-link"></i>
+                    </a>
+                </h4>
                 <?php
                 if (getTableExists($conn, $table)) {
                     echo "<p class='alert alert-success'>Table Exists</p>";
@@ -71,7 +75,7 @@ require_once "functions.php";
             </div>
             <?php
         } // end foreach table
-            ?>
+        ?>
     </div>
 
     <!-- end demo HTML code -->

@@ -12,38 +12,33 @@
  *              Attribution-ShareAlike 3.0 Australia License.
  */
 
-$title = "ICTDBS504 | Sample | Tags | Add";
+$title = "ICTDBS504 | Sample | Tags | Remove";
 require_once "header.php";
 require_once "connection.php";
 
 if (isset($_POST)) {
 
     // Check to see if the "newTag" was filled out
-    if (isset($_POST['newTag']) && strlen($_POST['newTag']) > 0) {
+    if (isset($_POST['currentTag'], $_POST['tag']) && (int)$_POST['currentTag'] > 0 && strlen($_POST['tag']) > 0) {
 
-        $title = trim($_POST['newTag']);
+        $tagID = (int)$_POST['currentTag'];
+        $title = trim($_POST['tag']);
         if (strpos($title, '#') === 0) {
             $title = substr_replace($title, '', 0, 1);
         }
 
-        $description = '';
-        // see if the description contained any content
-        if (isset($_POST['tagDescription']) && strlen($_POST['tagDescription']) > 0) {
-            $description = trim($_POST['tagDescription']);
-        }
-
         // SQL to create the tag
-        $sqlBrowse = "INSERT IGNORE INTO tags(tag, description, created_at, updated_at) VALUES (:aTag, :aNote, NOW(), NOW())";
+        $sqlBrowse = 'DELETE FROM tags WHERE id = :bTag AND tag = :aTag';
         // bind the parameters and execute the SQL
         $stmt = $conn->prepare($sqlBrowse);
-        $stmt->bindParam(":aTag", $title);
-        $stmt->bindParam(":aNote", $description);
+        $stmt->bindParam(":aTag", $title, PDO::PARAM_STR);
+        $stmt->bindParam(":bTag", $tagID, PDO::PARAM_INT);
         // execute the insert
         $stmt->execute();
 
     } else {
         // this will have a proper error message later
-        echo "Sorry no tag give, aborting";
+        echo "Sorry no tag given, aborting";
     }
 } else {
     // this will have a proper error message later

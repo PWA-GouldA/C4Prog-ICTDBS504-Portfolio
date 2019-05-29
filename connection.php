@@ -24,26 +24,26 @@
  */
 
 if (!defined('DB_NAME')) {
-    define('DB_NAME', 'ajg_links');
+    define('DB_NAME', '');
 }
 
 if (!defined('DB_TYPE')) {
-    define('DB_TYPE', 'mysql');
+    define('DB_TYPE', '');
 }
 
 if (!defined('DB_HOST')) {
-    define('DB_HOST', '127.0.0.1');
+    define('DB_HOST', '');
 }
 
 if (!defined('DB_PORT')) {
     define('DB_PORT', 3306);
 }
 if (!defined('DB_USER')) {
-    define('DB_USER', 'ajg_links');
+    define('DB_USER', '');
 }
 
 if (!defined('DB_PASSWORD')) {
-    define('DB_PASSWORD', 'Password1');
+    define('DB_PASSWORD', '');
 }
 
 
@@ -57,6 +57,8 @@ if (!isset($conn) || $conn == null) {
     $connectionString = sprintf("%s:dbname=%s;host=%s;port=%s", DB_TYPE, DB_NAME, DB_HOST, DB_PORT);
     try {
         $conn = new PDO($connectionString, DB_USER, DB_PASSWORD);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
     }
     catch (PDOException $exception) {
         echo "<h1>OOPS!</h1>";

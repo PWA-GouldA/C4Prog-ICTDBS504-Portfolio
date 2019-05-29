@@ -19,9 +19,10 @@ require_once "connection.php";
 if (isset($_POST)) {
 
     // Check to see if the "newTag" was filled out
-    if (isset($_POST['newTag']) && strlen($_POST['newTag']) > 0) {
+    if (isset($_POST['theTag']) && strlen($_POST['theTag']) > 0 && isset($_POST['currentTag']) && $_POST['currentTag'] > 0) {
 
-        $title = trim($_POST['newTag']);
+        $tagID = (int)$_POST['currentTag'];
+        $title = trim($_POST['theTag']);
         if (strpos($title, '#') === 0) {
             $title = substr_replace($title, '', 0, 1);
         }
@@ -33,17 +34,18 @@ if (isset($_POST)) {
         }
 
         // SQL to create the tag
-        $sqlBrowse = "INSERT IGNORE INTO tags(tag, description, created_at, updated_at) VALUES (:aTag, :aNote, NOW(), NOW())";
+        $sqlBrowse = 'UPDATE tags SET tag = :aTag, description = :aNote WHERE id = :bTag';
         // bind the parameters and execute the SQL
         $stmt = $conn->prepare($sqlBrowse);
-        $stmt->bindParam(":aTag", $title);
-        $stmt->bindParam(":aNote", $description);
+        $stmt->bindParam(":aTag", $title, PDO::PARAM_STR);
+        $stmt->bindParam(":bTag", $tagID, PDO::PARAM_INT);
+        $stmt->bindParam(":aNote", $description, PDO::PARAM_STR);
         // execute the insert
         $stmt->execute();
 
     } else {
         // this will have a proper error message later
-        echo "Sorry no tag give, aborting";
+        echo "Sorry no tag given, aborting";
     }
 } else {
     // this will have a proper error message later

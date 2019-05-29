@@ -344,3 +344,5 @@ composer.phar
 /vendor/
 /sample/
 /sample/**/
+/resources/
+/dummy_files/

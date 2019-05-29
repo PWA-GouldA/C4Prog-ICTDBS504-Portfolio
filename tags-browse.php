@@ -18,13 +18,18 @@ require_once "connection.php";
 
 // Read the tags from the db into an array
 // SQL to select all (fields) from the tags
-$sqlBrowse = "SELECT * FROM tags ORDER BY title;";
+$sqlBrowse = "SELECT * FROM tags WHERE tag LIKE :findThis ORDER BY tag ";
 
-// SQL to select the given, family and email only
-// SELECT given_name, family_name, email FROM tags
+$searchTerm = '';
+$search = '%';
+if (isset($_POST['search'])) {
+    $searchTerm = $_POST['search'];
+    $search = '%' . $searchTerm . '%';
+}
 
 // execute the SQL
 $stmt = $conn->prepare($sqlBrowse);
+$stmt->bindParam(":findThis", $search);
 $stmt->execute();
 
 // store results in array
@@ -37,8 +42,21 @@ $tags = $stmt->fetchAll();
         <h1 class="mt-4"><?= $title; ?></h1>
         <h2 class="text-muted">Browse Tags</h2>
         <div class="row">
-            <p class="col"><a href="tags-browse.php" class="btn btn-primary mb-1">Browse all</a></p>
-            <p class="col text-right"><a href="tags-create.php" class="btn btn-success mb-1">Add new tag</a></p>
+            <p class="col-2">
+                <a href="tags-browse.php" class="btn btn-primary mb-1">Browse all</a>
+            </p>
+            <p class="col">
+                <a href="tags-add.php" class="btn btn-success mb-1">
+                    <i class="fa fa-plus"></i> New Tag
+                </a>
+            </p>
+            <div class="col">
+                <form class="form-inline" method="post">
+                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search"
+                           name="search" value="<?= $searchTerm ?>">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
@@ -51,6 +69,7 @@ $tags = $stmt->fetchAll();
             <tr>
                 <th>Tag</th>
                 <th>Date Added</th>
+                <th>Actions</th>
             </tr>
             </thead>
 
@@ -61,6 +80,23 @@ $tags = $stmt->fetchAll();
                 <tr>
                     <td><?= $tag->tag ?></td>
                     <td><?= $tag->created_at ?></td>
+                    <td>
+                        <form action="tags-browse.php" method="post">
+                            <input type="hidden" name="tag" value="<?= $tag->tag ?>">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="submit" class="btn btn-success" formaction="tags-read.php" name="btnRead">
+                                    <i class="fa fa-eye"></i>
+                                </button>
+                                <button type="submit" class="btn btn-warning" formaction="tags-edit.php" name="btnEdit">
+                                    <i class="fa fa-pen"></i>
+                                </button>
+                                <button type="submit" class="btn btn-danger" formaction="tags-delete.php"
+                                        name="btnDelete">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
                 <?php
             } // end for each

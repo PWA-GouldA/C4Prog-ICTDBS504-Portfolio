@@ -16,6 +16,8 @@
 if (!session_id()) {
     session_start();
 }
+require_once "vendor/autoload.php";
+
 ?>
 <!DOCTYPE html>
 <html lang="en" class="h-100">
@@ -31,9 +33,11 @@ if (!session_id()) {
     <link rel="stylesheet" href="./assets/css/c4prog.css"/>
     <!-- Leafletjs Specific Stylesheet -->
     <link rel="stylesheet" href="./assets/css/leaflet/leaflet.css"/>
+<!-- Chart.js Specific Stylesheet -->
+    <link rel="stylesheet" href="./assets/css/Chart.min.css"/>
 
     <?php /* use PHP to show a different title and header id $title is set */ ?>
-    <title><?= isset($title) ? $title : 'Week 12' ?></title>
+    <title><?= isset($title) ? $title : 'Portfolio' ?></title>
 
     <base href="http://localhost/AJG/C4Prog-DBS504/">
 
@@ -65,9 +69,6 @@ if (!session_id()) {
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
                 <a class="nav-link" href="about.php">About</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="db-management.php">Management</a>
             </li>
         </ul>
     </nav>

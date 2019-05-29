@@ -1,0 +1,7 @@
+{
+    "require": {
+        "plasticbrain/php-flash-messages": "^1.0",
+        "nesbot/carbon": "^2.17",
+        "ext-pdo": "*"
+    }
+}
